@@ -87,28 +87,99 @@ dispara el sync de uso on-demand si el cursor tiene más de 1h de antigüedad
 ## 2. Checklist manual para Keiner (Consola de Anthropic + n8n)
 
 Estos pasos **no los hace Claude Code** — se hacen a mano, una sola vez por
-agente:
+agente, en [platform.claude.com](https://platform.claude.com).
 
-1. **Crear una organización** en la Claude Console si aún no existe
-   (Console → Settings → Organization). La Admin API no funciona con cuenta
-   individual.
-2. **Crear un workspace por agente**: `Rossy`, `Ista` (y uno por cada agente
-   futuro). Console → Settings → Workspaces.
-3. Dentro de cada workspace, **crear la API key** que usará ese agente en n8n,
-   y actualizar la credencial correspondiente en el workflow de n8n para que
-   cada agente use SU key (así los tokens y el costo quedan atribuidos al
-   agente correcto, sin cálculos propios).
-4. **Crear una Admin API key** (`sk-ant-admin...`) para el cron del panel.
-   Guardarla solo en las env vars de Vercel (`ANTHROPIC_ADMIN_KEY`).
-5. **Copiar el `workspace_id`** de cada workspace (Console o vía [List
-   Workspaces API](https://platform.claude.com/docs/en/api/admin-api/workspaces/list-workspaces))
-   y actualizar la tabla `agentes`:
-   ```sql
-   UPDATE agentes SET workspace_id = 'wrkspc_...' WHERE slug = 'rossy';
-   UPDATE agentes SET workspace_id = 'wrkspc_...' WHERE slug = 'ista';
-   ```
-6. **Agregar los 2 nodos de logging** a cada workflow de n8n (Rossy e Ista) —
-   ver instrucciones exactas en la sección 3 de este README.
+#### Paso 1 — Organización (solo si no existe todavía)
+
+La Admin API **no funciona con cuenta individual**, necesitas una organización
+en la Claude Console:
+
+1. Entra a [platform.claude.com](https://platform.claude.com).
+2. Si tu cuenta es individual, verás un aviso para crear una organización (o
+   ve directo a [platform.claude.com/create](https://platform.claude.com/create)).
+3. Completa el formulario: nombre de la organización, tipo de entidad, país y
+   uso previsto → **Complete setup**.
+4. Se crea la organización con un **Default Workspace**, y quedas como
+   miembro con rol **admin** (necesario para todo lo que sigue).
+
+Si la organización ya existe, sigues con el paso 2 usando tu cuenta admin.
+
+#### Paso 2 — Crear un workspace por agente
+
+Un workspace por agente (`Rossy`, `Ista`, y uno por cada agente futuro) es lo
+que permite que tokens y costo queden atribuidos al agente correcto sin
+cálculos propios — el endpoint de costos de Anthropic agrupa por workspace.
+
+1. En la Console, ve a **Settings → Workspaces**.
+2. Clic en **Add Workspace** (o **Create workspace**).
+3. Nombre: `Rossy` (color libre, es solo para identificarlo visualmente en la
+   Console). Clic en **Create**.
+4. Repite para `Ista`.
+
+#### Paso 3 — Crear la API key de cada agente (dentro de su workspace)
+
+Las API keys quedan atadas al workspace en el que se crean — **no se pueden
+mover después** — así que hay que crearlas desde dentro del workspace
+correcto, no desde una pantalla genérica:
+
+1. Ve a **Settings → Workspaces** y entra al workspace `Rossy`.
+2. En la página de detalle del workspace, pestaña **API Keys**.
+3. Clic en **Create Key**, dale un nombre descriptivo (ej. `n8n-rossy-prod`),
+   elige expiración (`Never` si la vas a guardar en el gestor de credenciales
+   de n8n y rotarla tú mismo) → **Create Key**.
+4. Copia el secreto (`sk-ant-api...`) — solo se muestra una vez. Pégalo en la
+   credencial de Anthropic/Claude del workflow de **Rossy** en n8n.
+5. Repite todo el paso 3 dentro del workspace `Ista`, y pega esa key en la
+   credencial del workflow de **Ista**.
+
+Cada workflow de n8n debe quedar usando SU propia key (nunca la misma para
+los dos agentes).
+
+#### Paso 4 — Crear la Admin API key (para el cron del panel)
+
+Esta key es distinta a las de los agentes: da acceso de solo-lectura a
+uso/costo de **toda** la organización, y la necesita `/api/cron/*` para
+consultar la Usage & Cost Admin API.
+
+1. Ve a **Settings → Admin keys** (necesitas rol **admin** de la
+   organización).
+2. Clic en **Create key**, nómbrala (ej. `torun-monitor-cron`), elige
+   expiración → **Create**.
+3. Copia el secreto (`sk-ant-admin01-...`) — solo se muestra una vez.
+4. Guárdalo **únicamente** en Vercel: Project Settings → Environment
+   Variables → `ANTHROPIC_ADMIN_KEY`. Nunca en el repo, nunca en n8n.
+
+#### Paso 5 — Copiar el `workspace_id` de cada workspace
+
+El `workspace_id` (formato `wrkspc_...`) es lo que conecta cada workspace con
+su fila en la tabla `agentes`. Dos formas de obtenerlo:
+
+- **Desde la Console:** entra al workspace (`Settings → Workspaces →
+  Rossy`/`Ista`) y revisa la página de detalle o la URL del navegador — el ID
+  suele aparecer ahí.
+- **Con la Admin key (más confiable):**
+  ```bash
+  curl "https://api.anthropic.com/v1/organizations/workspaces?limit=20" \
+    --header "anthropic-version: 2023-06-01" \
+    --header "x-api-key: $ANTHROPIC_ADMIN_KEY"
+  ```
+  La respuesta trae `name` e `id` (`wrkspc_...`) de cada workspace.
+
+Con esos IDs, actualiza la tabla `agentes`:
+
+```sql
+UPDATE agentes SET workspace_id = 'wrkspc_...' WHERE slug = 'rossy';
+UPDATE agentes SET workspace_id = 'wrkspc_...' WHERE slug = 'ista';
+```
+
+A partir de ahí, el cron horario/diario ya puede mapear el uso y costo de
+Anthropic a cada agente en el panel.
+
+#### Paso 6 — Agregar los 2 nodos de logging en n8n
+
+Último paso, en n8n (no en la Consola de Anthropic): agregar los 2 nodos
+Postgres por workflow (Rossy e Ista) — ver instrucciones exactas copy-paste
+en la sección 3 de este README.
 
 ### Agente nuevo (checklist rápida)
 
