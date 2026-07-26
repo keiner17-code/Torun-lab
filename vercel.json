@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-uso",
-      "schedule": "0 * * * *"
+      "schedule": "15 4 * * *"
     },
     {
       "path": "/api/cron/sync-costo",

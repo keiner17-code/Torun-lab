@@ -77,10 +77,13 @@ La sesión queda en una cookie httpOnly de 30 días.
 ### 1.5 Deploy
 
 Push a `main` → Vercel hace auto-deploy (sin PRs, flujo solo). `vercel.json`
-registra los dos cron jobs (`sync-uso` cada hora, `sync-costo` una vez al
-día). Si tu plan de Vercel no permite cron horario, no pasa nada: `/monitor`
-dispara el sync de uso on-demand si el cursor tiene más de 1h de antigüedad
-(con un lock simple para evitar corridas dobles).
+registra los dos cron jobs, ambos una vez al día — el plan Hobby de Vercel
+no permite cron con más frecuencia que diaria, así que `sync-uso` corre a
+diario y `/monitor` se encarga de rellenar el resto: dispara el sync on-demand
+si el cursor tiene más de 1h de antigüedad (con un lock simple para evitar
+corridas dobles), manteniendo los datos razonablemente al día entre visitas
+al panel. Si en algún momento pasas a un plan que permita cron horario,
+cambia el `schedule` de `sync-uso` en `vercel.json` a `0 * * * *`.
 
 ---
 
@@ -252,7 +255,7 @@ src/lib/sync.ts                        Lógica de sync (uso + costo, UPSERT idem
 src/lib/auth.ts                        PIN + cookie httpOnly de sesión (30 días)
 src/middleware.ts                      Protege /monitor/*
 src/app/login/                         Pantalla de PIN
-src/app/api/cron/sync-uso/             Cron horario — Usage Report
+src/app/api/cron/sync-uso/             Cron diario (+ fallback on-demand) — Usage Report
 src/app/api/cron/sync-costo/           Cron diario — Cost Report
 src/app/monitor/                       Dashboard, detalle de agente, conversaciones, transcript
 ```
