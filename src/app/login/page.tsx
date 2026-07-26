@@ -11,7 +11,12 @@ export default function LoginPage({
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-torun.svg" alt="Torún AI Partner" className="mx-auto h-14 w-auto sm:h-16" />
+          <img
+            src="/torun-logo.svg"
+            alt="Torún AI Partner"
+            className="mx-auto h-14 w-auto sm:h-16"
+            style={{ filter: "invert(1) brightness(1.3)" }}
+          />
           <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gold">Monitor</p>
           <p className="mt-1 text-sm text-slate-400">
             Ingresa el PIN de acceso al panel
