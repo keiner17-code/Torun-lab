@@ -9,8 +9,12 @@ export function TopNav({
 }) {
   return (
     <header className="sticky top-0 z-10 border-b border-white/10 bg-navy-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <div className="min-w-0">
+      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
+        <Link href="/monitor" className="flex-shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-torun-compact.svg" alt="Torún" className="h-6 w-auto sm:h-7" />
+        </Link>
+        <div className="min-w-0 flex-1">
           {migas && migas.length > 0 && (
             <nav className="mb-0.5 flex items-center gap-1 text-xs text-slate-500">
               {migas.map((m, i) => (

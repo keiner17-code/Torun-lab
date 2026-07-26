@@ -10,10 +10,9 @@ export default function LoginPage({
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gold/15 text-xl font-semibold text-gold">
-            T
-          </div>
-          <h1 className="text-xl font-semibold text-white">Torun Monitor</h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-torun.svg" alt="Torún AI Partner" className="mx-auto h-14 w-auto sm:h-16" />
+          <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gold">Monitor</p>
           <p className="mt-1 text-sm text-slate-400">
             Ingresa el PIN de acceso al panel
           </p>
