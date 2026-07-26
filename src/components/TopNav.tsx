@@ -12,12 +12,7 @@ export function TopNav({
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
         <Link href="/monitor" className="flex-shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/torun-logo.svg"
-            alt="Torún"
-            className="h-6 w-auto sm:h-7"
-            style={{ filter: "invert(1) brightness(1.3)" }}
-          />
+          <img src="/logo-torun-compact.svg" alt="Torún" className="h-6 w-auto sm:h-7" />
         </Link>
         <div className="min-w-0 flex-1">
           {migas && migas.length > 0 && (

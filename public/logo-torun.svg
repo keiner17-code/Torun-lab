@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 471.53 180.76">
+  <defs>
+    <style>
+      text {
+        fill: #ffffff;
+      }
+
+      .cls-1 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-2 {
+        letter-spacing: -.15em;
+      }
+
+      .cls-3 {
+        letter-spacing: .05em;
+      }
+
+      .cls-4 {
+        font-family: HalyardMicro-Bold, 'Halyard Micro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 157.6px;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      .cls-5 {
+        font-family: Termina-Regular, Termina, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 29.71px;
+      }
+
+      .cls-6 {
+        letter-spacing: .05em;
+      }
+
+      .cls-7 {
+        letter-spacing: -.11em;
+      }
+
+      .cls-8 {
+        letter-spacing: -.1em;
+      }
+
+      .cls-9 {
+        letter-spacing: .02em;
+      }
+    </style>
+  </defs>
+  <g id="Capa_1-2" data-name="Capa 1">
+    <g>
+      <text class="cls-4" transform="translate(0 132.38)"><tspan class="cls-2" x="0" y="0">T</tspan><tspan class="cls-7" x="81.32" y="0">o</tspan><tspan class="cls-1" x="176.67" y="0">r</tspan><tspan class="cls-8" x="256.41" y="0">ún</tspan></text>
+      <text class="cls-5" transform="translate(262.54 169.68)" style="letter-spacing: .05em;">AI Partner</text>
+    </g>
+  </g>
+</svg>
